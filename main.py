@@ -28,6 +28,9 @@ async def scheduler():
     now = datetime.now(timezone.utc)
     hour = now.hour
     minute = now.minute
+    # TEMP TEST TRIGGER
+    if hour == 22 and minute == 40:
+        await send_message("test_trigger", "🧪 Timed scheduler test successful.")
    
     # Bear Hunt 1 (20:15 UTC)
     if hour == 20 and minute == 0:
