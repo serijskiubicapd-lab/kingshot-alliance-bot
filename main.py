@@ -20,7 +20,7 @@ async def send_message(message_key, message_text):
     if last_sent.get(message_key) != minute_key:
         channel = bot.get_channel(CHANNEL_ID)
         role = channel.guild.get_role(ROLE_ID)
-        await channel.send(f"🐻 {role.mention} {message_text}")
+        await channel.send(f"🧪 TEST MESSAGE: {message_text}")
         last_sent[message_key] = minute_key
 
 @tasks.loop(seconds=30)
