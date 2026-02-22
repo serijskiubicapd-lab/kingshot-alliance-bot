@@ -6,6 +6,9 @@ from datetime import datetime, timezone
 TOKEN = os.getenv("DISCORD_TOKEN")
 CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
 ROLE_ID = int(os.getenv("ROLE_ID"))
+R2_ID = int(os.getenv("R2_ID"))
+R3_ID = int(os.getenv("R3_ID"))
+R4_ID = int(os.getenv("R4_ID"))
 
 intents = discord.Intents.default()
 bot = discord.Client(intents=intents)
@@ -18,10 +21,13 @@ async def send_message(message_key, message_text):
     minute_key = now.strftime("%Y-%m-%d %H:%M")
 
     if last_sent.get(message_key) != minute_key:
-        channel = bot.get_channel(CHANNEL_ID)
-        role = channel.guild.get_role(ROLE_ID)
-        await channel.send(f"🧪 TEST MESSAGE: {message_text}")
-        last_sent[message_key] = minute_key
+    channel = bot.get_channel(CHANNEL_ID)
+
+    await channel.send(
+        f"🐻 <@&{R2_ID}> <@&{R3_ID}> <@&{R4_ID}> {message_text}"
+    )
+
+    last_sent[message_key] = minute_key
 
 @tasks.loop(seconds=30)
 async def scheduler():
