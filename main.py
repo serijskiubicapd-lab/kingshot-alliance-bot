@@ -10,7 +10,7 @@ R3_ID = int(os.getenv("R3_ID"))
 R4_ID = int(os.getenv("R4_ID"))
 
 # 48-hour rotation anchor date (UTC)
-START_DATE = datetime(2025, 2, 24, tzinfo=timezone.utc)
+START_DATE = datetime(2026, 2, 24, tzinfo=timezone.utc)
 
 intents = discord.Intents.default()
 bot = discord.Client(intents=intents)
