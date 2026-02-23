@@ -9,6 +9,9 @@ R2_ID = int(os.getenv("R2_ID"))
 R3_ID = int(os.getenv("R3_ID"))
 R4_ID = int(os.getenv("R4_ID"))
 
+# 48-hour rotation anchor date (UTC)
+START_DATE = datetime(2025, 2, 24, tzinfo=timezone.utc)
+
 intents = discord.Intents.default()
 bot = discord.Client(intents=intents)
 
@@ -37,6 +40,13 @@ async def scheduler():
     now = datetime.now(timezone.utc)
     hour = now.hour
     minute = now.minute
+
+    # Calculate 48h rotation
+    days_since = (now.date() - START_DATE.date()).days
+
+    # Only run on valid Bear days (every 2 days)
+    if days_since % 2 != 0:
+        return
     
     # Bear Hunt 1 (20:15 UTC)
     if hour == 20 and minute == 0:
