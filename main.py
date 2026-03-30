@@ -1,7 +1,7 @@
 import os
 import discord
 from discord.ext import tasks
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
@@ -11,6 +11,9 @@ R4_ID = int(os.getenv("R4_ID"))
 
 # 48-hour rotation anchor date (UTC)
 START_DATE = datetime(2026, 2, 24, tzinfo=timezone.utc)
+# Bear times (UTC)
+BEAR1_TIME = (19, 50)
+BEAR2_TIME = (3, 0)
 
 intents = discord.Intents.default()
 bot = discord.Client(intents=intents)
@@ -47,19 +50,30 @@ async def scheduler():
     # Only run on valid Bear days (every 2 days)
     if days_since % 2 != 0:
         return
-    
-    # Bear Hunt 1 (19:50 UTC)
-    if hour == 19 and minute == 35:
-        await send_message("bear1_15", "Bear Hunt 1 starts in 15 minutes (19:50 UTC)!")
-    if hour == 19 and minute == 45:
-        await send_message("bear1_5", "Bear Hunt 1 starts in 5 minutes (19:50 UTC)!")
 
+    # Bear Hunt 1
+    b1_time = now.replace(hour=BEAR1_TIME[0], minute=BEAR1_TIME[1], second=0, microsecond=0)
 
-    # Bear Hunt 2 (03:00 UTC for all future bears)
-    if hour == 2 and minute == 45:
-        await send_message("bear2_15", "Bear Hunt 2 starts in 15 minutes (03:00 UTC)!")
-    if hour == 2 and minute == 55:
-        await send_message("bear2_5", "Bear Hunt 2 starts in 5 minutes (03:00 UTC)!")
+    target_15 = b1_time - timedelta(minutes=15)
+    target_5 = b1_time - timedelta(minutes=5)
+
+    if abs((now - target_15).total_seconds()) < 60:
+        await send_message("bear1_15", f"Bear Hunt 1 starts in 15 minutes ({BEAR1_TIME[0]:02d}:{BEAR1_TIME[1]:02d} UTC)!")
+
+    if abs((now - target_5).total_seconds()) < 60:
+        await send_message("bear1_5", f"Bear Hunt 1 starts in 5 minutes ({BEAR1_TIME[0]:02d}:{BEAR1_TIME[1]:02d} UTC)!")
+
+    # Bear Hunt 2
+    b2_time = now.replace(hour=BEAR2_TIME[0], minute=BEAR2_TIME[1], second=0, microsecond=0)
+
+    target_15 = b2_time - timedelta(minutes=15)
+    target_5 = b2_time - timedelta(minutes=5)
+
+    if abs((now - target_15).total_seconds()) < 60:
+        await send_message("bear2_15", f"Bear Hunt 2 starts in 15 minutes ({BEAR2_TIME[0]:02d}:{BEAR2_TIME[1]:02d} UTC)!")
+
+    if abs((now - target_5).total_seconds()) < 60:
+        await send_message("bear2_5", f"Bear Hunt 2 starts in 5 minutes ({BEAR2_TIME[0]:02d}:{BEAR2_TIME[1]:02d} UTC)!")
 
 @bot.event
 async def on_ready():
