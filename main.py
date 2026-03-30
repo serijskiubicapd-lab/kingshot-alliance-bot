@@ -76,6 +76,9 @@ async def scheduler():
             second=0,
             microsecond=0
         )
+        
+        if event_time < now:
+            event_time += timedelta(days=2)
 
         target_15 = event_time - timedelta(minutes=15)
         target_5 = event_time - timedelta(minutes=5)
