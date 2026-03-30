@@ -64,6 +64,12 @@ async def scheduler():
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
-    scheduler.start()
 
+    channel = bot.get_channel(CHANNEL_ID)
+    if channel:
+        await channel.send(
+            f"🐻 <@&{R2_ID}> <@&{R3_ID}> <@&{R4_ID}> Bear Hunt today starts at 19:50 UTC!"
+        )
+
+    scheduler.start()
 bot.run(TOKEN)
