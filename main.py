@@ -54,19 +54,12 @@ async def scheduler():
     if hour == 19 and minute == 45:
         await send_message("bear1_5", "Bear Hunt 1 starts in 5 minutes (19:50 UTC)!")
 
-    # Bear Hunt 2 special (03:35 UTC on 2026-03-10)
-    if now.date() == datetime(2026, 3, 10, tzinfo=timezone.utc).date():
-        if hour == 3 and minute == 20:
-            await send_message("bear2_15_special", "Bear Hunt 2 starts in 15 minutes (03:35 UTC)!")
-        if hour == 3 and minute == 30:
-            await send_message("bear2_5_special", "Bear Hunt 2 starts in 5 minutes (03:35 UTC)!")
 
-    # Normal Bear Hunt 2 (03:00 UTC for all future bears)
-    else:
-        if hour == 2 and minute == 45:
-            await send_message("bear2_15", "Bear Hunt 2 starts in 15 minutes (03:00 UTC)!")
-        if hour == 2 and minute == 55:
-            await send_message("bear2_5", "Bear Hunt 2 starts in 5 minutes (03:00 UTC)!")
+    # Bear Hunt 2 (03:00 UTC for all future bears)
+    if hour == 2 and minute == 45:
+        await send_message("bear2_15", "Bear Hunt 2 starts in 15 minutes (03:00 UTC)!")
+    if hour == 2 and minute == 55:
+        await send_message("bear2_5", "Bear Hunt 2 starts in 5 minutes (03:00 UTC)!")
 
 @bot.event
 async def on_ready():
