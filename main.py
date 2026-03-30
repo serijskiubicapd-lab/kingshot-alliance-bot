@@ -2,6 +2,20 @@ import os
 import discord
 from discord.ext import tasks
 from datetime import datetime, timezone, timedelta
+import json
+
+STATE_FILE = "state.json"
+
+def load_state():
+    try:
+        with open(STATE_FILE, "r") as f:
+            return json.load(f)
+    except:
+        return {}
+
+def save_state():
+    with open(STATE_FILE, "w") as f:
+        json.dump(last_sent, f)
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
@@ -18,7 +32,7 @@ BEAR2_TIME = (3, 0)
 intents = discord.Intents.default()
 bot = discord.Client(intents=intents)
 
-last_sent = {}
+last_sent = load_state()
 
 async def send_message(message_key, message_text):
     global last_sent
@@ -37,6 +51,7 @@ async def send_message(message_key, message_text):
         )
 
         last_sent[message_key] = minute_key
+        save_state()
 
 @tasks.loop(seconds=30)
 async def scheduler():
