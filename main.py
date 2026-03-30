@@ -48,11 +48,11 @@ async def scheduler():
     if days_since % 2 != 0:
         return
     
-    # Bear Hunt 1 (20:15 UTC)
-    if hour == 20 and minute == 0:
-        await send_message("bear1_15", "Bear Hunt 1 starts in 15 minutes (20:15 UTC)!")
-    if hour == 20 and minute == 10:
-        await send_message("bear1_5", "Bear Hunt 1 starts in 5 minutes (20:15 UTC)!")
+    # Bear Hunt 1 (19:50 UTC)
+    if hour == 19 and minute == 35:
+        await send_message("bear1_15", "Bear Hunt 1 starts in 15 minutes (19:50 UTC)!")
+    if hour == 19 and minute == 45:
+        await send_message("bear1_5", "Bear Hunt 1 starts in 5 minutes (19:50 UTC)!")
 
     # Bear Hunt 2 special (03:35 UTC on 2026-03-10)
     if now.date() == datetime(2026, 3, 10, tzinfo=timezone.utc).date():
