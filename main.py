@@ -26,7 +26,7 @@ R4_ID = int(os.getenv("R4_ID"))
 # 48-hour rotation anchor date (UTC)
 START_DATE = datetime(2026, 2, 24, tzinfo=timezone.utc)
 # Bear times (UTC)
-BEAR1_TIME = (19, 50)
+BEAR1_TIME = (19, 25)
 BEAR2_TIME = (3, 0)
 BEARS = [
     ("bear1", BEAR1_TIME, "Bear Hunt 1"),
