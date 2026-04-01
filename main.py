@@ -40,21 +40,27 @@ last_sent = load_state()
 
 async def send_message(message_key, message_text):
     now = datetime.now(timezone.utc)
-    minute_key = now.strftime("%Y-%m-%d %H:%M")
 
-    if last_sent.get(message_key) != minute_key:
-        channel = bot.get_channel(CHANNEL_ID)
+    last_time_str = last_sent.get(message_key)
 
-        if not channel:
-            print("Channel not found!")
+    if last_time_str:
+        last_time = datetime.strptime(last_time_str, "%Y-%m-%d %H:%M")
+        
+        if abs((now - last_time).total_seconds()) < 90:
             return
 
-        await channel.send(
-            f"🐻 <@&{R2_ID}> <@&{R3_ID}> <@&{R4_ID}> {message_text}"
-        )
+    channel = bot.get_channel(CHANNEL_ID)
 
-        last_sent[message_key] = minute_key
-        save_state()
+    if not channel:
+        print("Channel not found!")
+        return
+
+    await channel.send(
+        f"🐻 <@&{R2_ID}> <@&{R3_ID}> <@&{R4_ID}> {message_text}"
+    )
+
+    last_sent[message_key] = now.strftime("%Y-%m-%d %H:%M")
+    save_state()
 
 @tasks.loop(seconds=30)
 async def scheduler():
