@@ -89,17 +89,17 @@ async def scheduler():
         target_15 = event_time - timedelta(minutes=15)
         target_5 = event_time - timedelta(minutes=5)
 
-        if abs((now - target_15).total_seconds()) < 60:
+        if target_15 <= now < event_time:
             await send_message(
                 f"{key}_15",
                 f"{label} starts in 15 minutes ({time_tuple[0]:02d}:{time_tuple[1]:02d} UTC)!"
             )
 
-        if abs((now - target_5).total_seconds()) < 60:
+        if target_5 <= now < event_time:
             await send_message(
                 f"{key}_5",
                 f"{label} starts in 5 minutes ({time_tuple[0]:02d}:{time_tuple[1]:02d} UTC)!"
-            )
+            ) 
         
 @bot.event
 async def on_ready():
