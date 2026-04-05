@@ -44,7 +44,7 @@ async def send_message(message_key, message_text):
     last_time_str = last_sent.get(message_key)
 
     if last_time_str:
-        last_time = datetime.strptime(last_time_str, "%Y-%m-%d %H:%M")
+        last_time = datetime.strptime(last_time_str, "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
         
         if abs((now - last_time).total_seconds()) < 90:
             return
