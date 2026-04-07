@@ -80,7 +80,7 @@ async def scheduler():
             event_id = event_time.strftime("%Y-%m-%d %H:%M")
             message_key_15 = f"{key}_15"
 
-            if target_15 <= now < event_time:
+            if target_15 <= now < target_5:
                 if last_sent.get(message_key_15) != event_id:
                     await send_message(
                         message_key_15,
