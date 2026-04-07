@@ -39,16 +39,6 @@ bot = discord.Client(intents=intents)
 last_sent = load_state()
 
 async def send_message(message_key, message_text):
-    now = datetime.now(timezone.utc)
-
-    last_time_str = last_sent.get(message_key)
-
-    if last_time_str:
-        last_time = datetime.strptime(last_time_str, "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
-        
-        if abs((now - last_time).total_seconds()) < 90:
-            return
-
     channel = bot.get_channel(CHANNEL_ID)
 
     if not channel:
@@ -59,47 +49,59 @@ async def send_message(message_key, message_text):
         f"🐻 <@&{R2_ID}> <@&{R3_ID}> <@&{R4_ID}> {message_text}"
     )
 
-    last_sent[message_key] = now.strftime("%Y-%m-%d %H:%M")
-    save_state()
-
 @tasks.loop(seconds=30)
 async def scheduler():
-    now = datetime.now(timezone.utc)
-   
-    # Calculate 48h rotation
-    days_since = (now.date() - START_DATE.date()).days
+    try:
+        now = datetime.now(timezone.utc)
+       
+        # Calculate 48h rotation
+        days_since = (now.date() - START_DATE.date()).days
 
-    # Only run on valid Bear days (every 2 days)
-    if days_since % 2 != 0:
-        return
-   
-    # Process all bears
-    for key, time_tuple, label in BEARS:
+        # Only run on valid Bear days (every 2 days)
+        if days_since % 2 != 0:
+            return
+       
+        # Process all bears
+        for key, time_tuple, label in BEARS:
 
-        event_time = now.replace(
-            hour=time_tuple[0],
-            minute=time_tuple[1],
-            second=0,
-            microsecond=0
-        )
-        
-        if event_time < now:
-            event_time += timedelta(days=2)
-
-        target_15 = event_time - timedelta(minutes=15)
-        target_5 = event_time - timedelta(minutes=5)
-
-        if target_15 <= now < event_time:
-            await send_message(
-                f"{key}_15",
-                f"{label} starts in 15 minutes ({time_tuple[0]:02d}:{time_tuple[1]:02d} UTC)!"
+            event_time = now.replace(
+                hour=time_tuple[0],
+                minute=time_tuple[1],
+                second=0,
+                microsecond=0
             )
+            
+            if event_time < now:
+                event_time += timedelta(days=2)
 
-        if target_5 <= now < event_time:
-            await send_message(
-                f"{key}_5",
-                f"{label} starts in 5 minutes ({time_tuple[0]:02d}:{time_tuple[1]:02d} UTC)!"
-            ) 
+            target_15 = event_time - timedelta(minutes=15)
+            target_5 = event_time - timedelta(minutes=5)
+
+            event_id = event_time.strftime("%Y-%m-%d %H:%M")
+            message_key_15 = f"{key}_15"
+
+            if target_15 <= now < event_time:
+                if last_sent.get(message_key_15) != event_id:
+                    await send_message(
+                        message_key_15,
+                        f"{label} starts in 15 minutes ({time_tuple[0]:02d}:{time_tuple[1]:02d} UTC)!"
+                    )
+                    last_sent[message_key_15] = event_id
+                    save_state()
+
+            message_key_5 = f"{key}_5"
+
+            if target_5 <= now < event_time:
+                if last_sent.get(message_key_5) != event_id:
+                    await send_message(
+                        message_key_5,
+                        f"{label} starts in 5 minutes ({time_tuple[0]:02d}:{time_tuple[1]:02d} UTC)!"
+                    )
+                    last_sent[message_key_5] = event_id
+                    save_state()
+
+    except Exception as e:
+        print(f"Scheduler error: {e}") 
         
 @bot.event
 async def on_ready():
