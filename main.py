@@ -107,5 +107,14 @@ async def scheduler():
 async def on_ready():
     print(f"Logged in as {bot.user}")
 
+    channel = bot.get_channel(CHANNEL_ID)
+
+    if channel:
+        await channel.send(
+            "🐻 **Bear Hunt 1 Update**\n\n"
+            "New time: **20:15 UTC**\n\n"
+            "Bot reminders will adjust automatically — see you there!"
+        )
+
     scheduler.start()
 bot.run(TOKEN)
