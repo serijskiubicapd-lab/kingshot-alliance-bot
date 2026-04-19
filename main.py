@@ -48,12 +48,45 @@ async def send_message(message_key, message_text):
     await channel.send(
         f"🐻 <@&{R2_ID}> <@&{R3_ID}> <@&{R4_ID}> {message_text}"
     )
+async def check_weekly_registration(now):
+    try:
+        # Monday = 0, Tuesday = 1
+        if now.weekday() not in [0, 1]:
+            return
+
+        # Check 00:00 window (safe for 30s loop)
+        if not (now.hour == 0 and now.minute == 0):
+            return
+
+        event_id = now.strftime("%Y-%m-%d")
+
+        message_key = "alliance_championship"
+
+        if last_sent.get(message_key) == event_id:
+            return
+
+        message_text = (
+            "**Alliance Championship - Registration**\n\n"
+            "• Use your best 3 heroes (these should really be golds by now hopefully)\n"
+            "• Register to the middle lane\n"
+            "• Activate pet skills before registering\n"
+            "• 50/20/30 formation"
+        )
+
+        await send_message(message_key, message_text)
+
+        last_sent[message_key] = event_id
+        save_state()
+
+    except Exception as e:
+        print(f"Weekly event error: {e}")
 
 @tasks.loop(seconds=30)
 async def scheduler():
     try:
         now = datetime.now(timezone.utc)
-       
+        await check_weekly_registration(now)
+
         # Calculate 48h rotation
         days_since = (now.date() - START_DATE.date()).days
 
