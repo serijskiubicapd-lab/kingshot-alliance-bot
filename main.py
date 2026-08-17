@@ -27,7 +27,7 @@ R4_ID = int(os.getenv("R4_ID"))
 START_DATE = datetime(2026, 2, 24, tzinfo=timezone.utc)
 # Bear times (UTC)
 BEAR1_TIME = (20, 15)
-BEAR2_TIME = (3, 0)
+BEAR2_TIME = (2, 30)
 BEARS = [
     ("bear1", BEAR1_TIME, "Bear Hunt 1"),
     ("bear2", BEAR2_TIME, "Bear Hunt 2"),
