@@ -76,7 +76,34 @@ async def send_message(message_key, message_text):
         f"🐻 <@&{R2_ID}> <@&{R3_ID}> <@&{R4_ID}> {message_text}"
     )
 
+# ============================================================
+# ONE-TIME NEW BEAR TIMES ANNOUNCEMENT
+# ============================================================
 
+async def send_new_bear_times_announcement():
+    message_key = "new_bear_times_announcement"
+
+    # Don't send it again if it was already sent
+    if last_sent.get(message_key):
+        return
+
+    message_text = (
+        "**NEW BEAR TRAP TIMES**\n\n"
+        "Starting with the next Bear Hunt, we have a new schedule:\n\n"
+        "🥉 **Trap 3 — 02:30 UTC**\n"
+        "📍 Takes place at the **\"KvK\" alliance**\n\n"
+        "🥈 **Trap 2 — 13:00 UTC**\n\n"
+        "🥇 **Trap 1 — 20:30 UTC**\n\n"
+        "⚠️ **All three traps are on the same Bear day.**\n"
+        "The usual **15-minute and 5-minute reminders** will continue.\n\n"
+        "Please take note of the new times!"
+    )
+
+    await send_message(message_key, message_text)
+
+    last_sent[message_key] = True
+    save_state()
+    
 # ============================================================
 # ALLIANCE CHAMPIONSHIP REGISTRATION
 # ============================================================
@@ -211,6 +238,8 @@ async def scheduler():
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
+
+    await send_new_bear_times_announcement()
 
     if not scheduler.is_running():
         scheduler.start()
