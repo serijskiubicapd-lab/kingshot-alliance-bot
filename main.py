@@ -41,7 +41,7 @@ START_DATE = datetime(2026, 2, 24, tzinfo=timezone.utc)
 
 TRAP3_TIME = (2, 30)     # 02:30 UTC
 TRAP2_TIME = (13, 0)     # 13:00 UTC
-TRAP1_TIME = (20, 30)    # 20:30 UTC
+TRAP1_TIME = (20, 15)    # 20:15 UTC
 
 
 BEARS = [
